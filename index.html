@@ -27,15 +27,11 @@
     (function primesApp() {
 
       function isPrime(n) {
-        try {
-          var k;
-          for (k = 2; k < n; k += 1) {
-            if (n % k === 0) {
-              return false;
-            }
+        var k;
+        for (k = 2; k < n; k += 1) {
+          if (n % k === 0) {
+            return false;
           }
-        } catch (err) {
-          console.error(err);
         }
         return true;
       }
