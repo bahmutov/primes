@@ -28,7 +28,8 @@
 
       function isPrime(n) {
         var k;
-        for (k = 2; k < n; k += 1) {
+        var limit = Math.sqrt(n);
+        for (k = 2; k <= limit; k += 1) {
           if (n % k === 0) {
             return false;
           }
