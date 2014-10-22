@@ -46,16 +46,21 @@
       console.assert(!isPrime(38));
 
       // finds Nth prime
+      var foundPrimes = [];
       function findPrime(n) {
-        var k = 1;
-        var foundPrimes = [];
+        var k;
+        if (foundPrimes.length) {
+          k = foundPrimes[foundPrimes.length - 1] + 1;
+        } else {
+          k = 1;
+        }
         while (foundPrimes.length < n) {
           if (isPrime(k)) {
             foundPrimes.push(k);
           }
           k += 1;
         };
-        return foundPrimes[foundPrimes.length - 1];
+        return foundPrimes[n - 1];
       }
       console.assert(findPrime(1) === 1);
       console.assert(findPrime(2) === 2);
