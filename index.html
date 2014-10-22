@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Primes</title>
+</head>
+
+<body ng-app="Primes">
+  <h1>Primes</h1>
+  <p>AngularJs application that finds first N prime numbers</p>
+
+  <div ng-controller="primesController">
+    <button id="find" ng-click="find()">Find</button> <input ng-model="n" placeholder="10" /> primes.
+  </div>
+
+  <script src="bower_components/angular/angular.js"></script>
+  <script>
+    function isPrime(n) {
+      var k;
+      for (k = 2; k < n; k += 1) {
+        if (n % k === 0) {
+          return false;
+        }
+      }
+      return true;
+    }
+    console.assert(isPrime(1));
+    console.assert(isPrime(2));
+    console.assert(isPrime(3));
+    console.assert(!isPrime(4));
+    console.assert(isPrime(5));
+    console.assert(!isPrime(6));
+    console.assert(isPrime(7));
+    console.assert(isPrime(37));
+    console.assert(!isPrime(38));
+
+    // finds Nth prime
+    function findPrime(n) {
+      var k = 1;
+      var foundPrimes = [];
+      while (foundPrimes.length < n) {
+        if (isPrime(k)) {
+          foundPrimes.push(k);
+        }
+        k += 1;
+      };
+      return foundPrimes[foundPrimes.length - 1];
+    }
+    console.assert(findPrime(1) === 1);
+    console.assert(findPrime(2) === 2);
+    console.assert(findPrime(3) === 3);
+    console.assert(findPrime(4) === 5);
+    console.assert(findPrime(5) === 7);
+
+    angular.module('Primes', [])
+      .controller('primesController', function ($scope) {
+        $scope.n = 10;
+        $scope.find = function () {
+          console.log('computing first', $scope.n, 'primes');
+        };
+      });
+  </script>
+</body>
+</html>
