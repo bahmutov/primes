@@ -8,10 +8,10 @@
 
 <body>
   <h1>Primes</h1>
-  <p>AngularJs application that finds first N prime numbers</p>
 
   <div ng-controller="primesController" ng-cloak>
     <button id="find" ng-click="find()">Find</button> <input ng-model="n" /> primes.
+    <p>AngularJs application that finds first {{ n }} prime numbers</p>
     <table>
       <tr ng-repeat="prime in primes | orderBy:$index ">
         <td>{{ "index" | lowercase }}</td>
