@@ -5,16 +5,6 @@
   <title>Primes</title>
   <script src="bower_components/angular/angular.js"></script>
   <script src="bower_components/angular-bindonce/bindonce.js"></script>
-  <style>
-    table {
-      table-layout: fixed;
-      width: 100%;
-      white-space: nowrap;
-    }
-    td {
-      width: 20%;
-    }
-  </style>
 </head>
 
 <body>
@@ -23,16 +13,15 @@
   <div ng-controller="primesController" ng-cloak>
     <button id="find" ng-click="find()">Find</button> <input ng-model="n" /> primes.
     <p>AngularJs application found first {{ primes.length }} prime numbers.</p>
-    <table>
-      <!--
-      <tr ng-repeat="prime in primes | orderBy:$index " bindonce>
-        <td>index</td>
-        <td bo-text="$index + 1 | number:0" />
-        <td>prime number</td>
-        <td bo-text="prime | number:0" />
-        <td>is prime? true</td>
-      </tr>
-      -->
+    <table style="TABLE-LAYOUT: fixed;" width="600">
+      <colgroup>
+        <col width="100">
+        <col width="100">
+        <col width="100">
+        <col width="100">
+        <col width="100">
+      </colgroup>
+      <tbody></tbody>
     </table>
   </div>
 
@@ -91,16 +80,23 @@
           $scope.n = 100000;
 
           function generateTableRows() {
+            var fragment = document.createDocumentFragment();
             var k;
             var str = '';
             for(k = 0; k < $scope.n; k += 1) {
-              str += '<tr><td>index</td>';
-              str += '<td>' + number(k + 1, 0) + '</td>';
-              str += '<td>prime number</td>';
-              str += '<td>' + number($scope.primes[k], 0) + '</td>';
-              str += '<td>is prime? true</td></tr>';
+              /*
+              str += '<tr height="20" width="600"><td width="100">index</td>';
+              str += '<td width="100">' + number(k + 1, 0) + '</td>';
+              str += '<td width="100">prime number</td>';
+              str += '<td width="100">' + number($scope.primes[k], 0) + '</td>';
+              str += '<td width="100">is prime? true</td></tr>';*/
+
+              var el = document.createElement('li');
+              el.innerText = 'prime ' + number($scope.primes[k], 0);
+              fragment.appendChild(el);
             }
-            document.getElementsByTagName('table')[0].innerHTML = str;
+            // document.getElementsByTagName('tbody')[0].innerHTML = str;
+            document.getElementsByTagName('tbody')[0].appendChild(fragment);
           }
 
           $scope.find = function () {
