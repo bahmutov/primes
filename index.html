@@ -26,7 +26,7 @@
   <div ng-controller="primesController" ng-cloak>
     <button id="find" ng-click="find()">Find</button> <input ng-model="n" /> primes.
     <p>AngularJs application found first {{ primes.length }} prime numbers.</p>
-    <table width="500">
+    <table id="table" width="500">
       <colgroup>
         <col width="100">
         <col width="100">
@@ -104,17 +104,17 @@
           function generateTableRows(first, last) {
             console.log('rendering primes from', first, 'to', last);
             var k;
-            var str = '';
-            var line;
+            var txt = angular.bind(document, document.createTextNode);
+            var table = document.createElement('table');
             for(k = first; k < last; k += 1) {
-              line = '<tr><td>index</td> \
-                <td>' + (k + 1) + '</td> \
-                <td>prime number</td> \
-                <td>' + $scope.primes[k] + '</td> \
-                <td>is prime? true</td></tr>';
-              str += line;
+              var row = table.insertRow();
+              row.insertCell().appendChild(txt('index'));
+              row.insertCell().appendChild(txt(k + 1));
+              row.insertCell().appendChild(txt('prime number'));
+              row.insertCell().appendChild(txt($scope.primes[k]));
+              row.insertCell().appendChild(txt('is prime? true'));
             }
-            document.getElementsByTagName('tbody')[0].innerHTML += str;
+            document.body.appendChild(table);
             console.timeStamp('updated tbody ' + first + ' to ' + last);
           }
 
