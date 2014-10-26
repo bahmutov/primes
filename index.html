@@ -88,11 +88,21 @@
         .filter('isPrime', function () {
           return isPrime;
         })
-        .controller('primesController', function ($scope, $filter, $timeout) {
+        .controller('primesController', function ($scope, $filter, $timeout, $q) {
           var number = $filter('number');
-          $scope.n = 100000;
+          $scope.n = 100;
+
+          function computePrimes(first, last) {
+            console.log('computing primes from', first, 'to', last);
+            var k;
+            for (k = first; k < last; k += 1) {
+              var prime = findPrime(k + 2);
+              $scope.primes.push(prime);
+            }
+          }
 
           function generateTableRows(first, last) {
+            console.log('rendering primes from', first, 'to', last);
             var k;
             var str = '';
             var line;
@@ -108,29 +118,33 @@
             console.timeStamp('updated tbody ' + first + ' to ' + last);
           }
 
+          function computeAndRenderBatch(first, last) {
+            computePrimes(first, last);
+            generateTableRows(first, last);
+            return $timeout(angular.noop, 0);
+          }
+
           $scope.find = function () {
             console.log('computing first', $scope.n, 'primes');
 
             foundPrimes = [];
             $scope.primes = [];
 
-            var firstBatchN = 100;
+            var batchSize = 50;
             var k;
-            for (k = 0; k < firstBatchN; k += 1) {
-              var prime = findPrime(k + 2);
-              $scope.primes.push(prime);
+
+            var computeAndLetUiRender = $q.when();
+            var computeNextBatch;
+
+            for (k = 0; k < $scope.n; k += batchSize) {
+              computeNextBatch = angular.bind(null, computeAndRenderBatch,
+                k, Math.min(k + batchSize, $scope.n));
+              computeAndLetUiRender = computeAndLetUiRender.then(computeNextBatch);
             }
-            generateTableRows(0, firstBatchN);
 
-            // return promise to allow timing this action
-            return $timeout(function computeSecondBatch() {
-              for (k = firstBatchN; k < $scope.n; k += 1) {
-                var prime = findPrime(k + 2);
-                $scope.primes.push(prime);
-              }
-              generateTableRows(firstBatchN, $scope.n);
-            }, 0);
-
+            return computeAndLetUiRender.then(function () {
+              console.log('all done');
+            });
           };
         });
     }());
