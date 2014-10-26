@@ -13,7 +13,7 @@
   <div ng-controller="primesController" ng-cloak>
     <button id="find" ng-click="find()">Find</button> <input ng-model="n" /> primes.
     <p>AngularJs application found first {{ primes.length }} prime numbers.</p>
-    <table style="TABLE-LAYOUT: fixed;" width="600">
+    <table style="table-layout: fixed; border-collapse: collapse;" width="500">
       <colgroup>
         <col width="100">
         <col width="100">
@@ -21,7 +21,7 @@
         <col width="100">
         <col width="100">
       </colgroup>
-      <tbody></tbody>
+      <tbody style="table-layout: fixed;" ></tbody>
     </table>
   </div>
 
@@ -80,23 +80,18 @@
           $scope.n = 100000;
 
           function generateTableRows() {
-            var fragment = document.createDocumentFragment();
             var k;
             var str = '';
+            var line;
             for(k = 0; k < $scope.n; k += 1) {
-              /*
-              str += '<tr height="20" width="600"><td width="100">index</td>';
-              str += '<td width="100">' + number(k + 1, 0) + '</td>';
-              str += '<td width="100">prime number</td>';
-              str += '<td width="100">' + number($scope.primes[k], 0) + '</td>';
-              str += '<td width="100">is prime? true</td></tr>';*/
-
-              var el = document.createElement('li');
-              el.innerText = 'prime ' + number($scope.primes[k], 0);
-              fragment.appendChild(el);
+              line = '<tr height="20" width="500"><td width="100" height="20">index</td> \
+                <td width="100" height="20">' + number(k + 1, 0) + '</td> \
+                <td width="100" height="20">prime number</td> \
+                <td width="100" height="20">' + number($scope.primes[k], 0) + '</td> \
+                <td width="100" height="20">is prime? true</td></tr>';
+              str += line;
             }
-            // document.getElementsByTagName('tbody')[0].innerHTML = str;
-            document.getElementsByTagName('tbody')[0].appendChild(fragment);
+            document.getElementsByTagName('tbody')[0].innerHTML = str;
           }
 
           $scope.find = function () {
