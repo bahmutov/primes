@@ -3,8 +3,9 @@
 
 <head>
   <title>Primes</title>
+  <script src="bower_components/jquery/dist/jquery.min.js"></script>
   <script src="bower_components/angular/angular.js"></script>
-  <script src="bower_components/angular-bindonce/bindonce.js"></script>
+  <script src="bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js"></script>
   <style>
     table {
       table-layout: fixed;
@@ -24,24 +25,27 @@
   <h1>Primes</h1>
 
   <div ng-controller="primesController" ng-cloak>
-    <button id="find" ng-click="find()">Find</button> <input ng-model="n" /> primes.
-    <p>AngularJs application found first {{ computedN }} prime numbers.</p>
+    <p>AngularJs application found first {{ primes.length }} prime numbers.</p>
     <table id="table" width="500">
-      <colgroup>
-        <col width="100">
-        <col width="100">
-        <col width="100">
-        <col width="100">
-        <col width="100">
-      </colgroup>
-      <tbody></tbody>
+      <tbody infinite-scroll="find()"
+        infinite-scroll-distance="3"
+        infinite-scroll-immediate-check="true"
+        infinite-scroll-disabled="computing">
+        <tr ng-repeat="prime in primes">
+          <td>index</td>
+          <td>{{ $index + 1 | number:0 }}</td>
+          <td>prime number</td>
+          <td>{{ prime | number:0 }}</td>
+          <td>is prime? true</td>
+        </tr>
+      </tbody>
     </table>
   </div>
 
   <script>
     (function primesApp() {
 
-      angular.module('Primes', [])
+      angular.module('Primes', ['infinite-scroll'])
         .factory('PrimeWorker', function ($q) {
           var worker = new Worker('./primes.js');
           var defer;
@@ -63,63 +67,25 @@
         })
         .controller('primesController', function ($scope, $filter, $timeout, $q, PrimeWorker) {
           var number = $filter('number');
-          $scope.n = 150000;
+          $scope.primes = [];
+          var batchSize = 100;
 
           function computePrimes(first, last) {
             return PrimeWorker.computePrimes(first, last).then(function (numbers) {
               var k, n = numbers.length;
               for(k = 0; k < n; k += 1) {
-                $scope.primes[$scope.computedN] = numbers[k];
-                $scope.computedN += 1;
+                $scope.primes.push(numbers[k]);
               }
             });
           }
 
-          function generateTableRows(first, last) {
-            // console.log('rendering primes from', first, 'to', last);
-            var k;
-            var txt = angular.bind(document, document.createTextNode);
-            var table = document.createElement('table');
-            for(k = first; k < last; k += 1) {
-              var row = table.insertRow();
-              row.insertCell().appendChild(txt('index'));
-              row.insertCell().appendChild(txt(k + 1));
-              row.insertCell().appendChild(txt('prime number'));
-              row.insertCell().appendChild(txt($scope.primes[k]));
-              row.insertCell().appendChild(txt('is prime? true'));
-            }
-            document.body.appendChild(table);
-            // console.timeStamp('updated tbody ' + first + ' to ' + last);
-          }
-
-          function computeAndRenderBatch(first, last) {
-            return computePrimes(first, last).then(function () {
-              generateTableRows(first, last);
-              return $timeout(angular.noop, 0);
-            });
-          }
-
           $scope.find = function () {
-            console.log('computing first', $scope.n, 'primes');
+            $scope.computing = true;
 
-            foundPrimes = [];
-            $scope.primes = new Array($scope.n);
-            $scope.computedN = 0;
-
-            var batchSize = 10000;
-            var k;
-
-            var computeAndLetUiRender = $q.when();
-            var computeNextBatch;
-
-            for (k = 0; k < $scope.n; k += batchSize) {
-              computeNextBatch = angular.bind(null, computeAndRenderBatch,
-                k, Math.min(k + batchSize, $scope.n));
-              computeAndLetUiRender = computeAndLetUiRender.then(computeNextBatch);
-            }
-
-            return computeAndLetUiRender.then(function () {
-              console.log('all done');
+            return computePrimes($scope.primes.length, $scope.primes.length + batchSize)
+            .then(function () {
+              console.log('computed', $scope.primes.length, 'primes');
+              $scope.computing = false;
             });
           };
         });
