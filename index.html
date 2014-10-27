@@ -25,7 +25,7 @@
 
   <div ng-controller="primesController" ng-cloak>
     <button id="find" ng-click="find()">Find</button> <input ng-model="n" /> primes.
-    <p>AngularJs application found first {{ primes.length }} prime numbers.</p>
+    <p>AngularJs application found first {{ computedN }} prime numbers.</p>
     <table id="table" width="500">
       <colgroup>
         <col width="100">
@@ -41,7 +41,7 @@
   <script>
     (function primesApp() {
 
-      angular.module('Primes', ['pasvaz.bindonce'])
+      angular.module('Primes', [])
         .factory('PrimeWorker', function ($q) {
           var worker = new Worker('./primes.js');
           var defer;
@@ -63,19 +63,20 @@
         })
         .controller('primesController', function ($scope, $filter, $timeout, $q, PrimeWorker) {
           var number = $filter('number');
-          $scope.n = 100;
+          $scope.n = 150000;
 
           function computePrimes(first, last) {
             return PrimeWorker.computePrimes(first, last).then(function (numbers) {
               var k, n = numbers.length;
               for(k = 0; k < n; k += 1) {
-                $scope.primes.push(numbers[k]);
+                $scope.primes[$scope.computedN] = numbers[k];
+                $scope.computedN += 1;
               }
             });
           }
 
           function generateTableRows(first, last) {
-            console.log('rendering primes from', first, 'to', last);
+            // console.log('rendering primes from', first, 'to', last);
             var k;
             var txt = angular.bind(document, document.createTextNode);
             var table = document.createElement('table');
@@ -88,7 +89,7 @@
               row.insertCell().appendChild(txt('is prime? true'));
             }
             document.body.appendChild(table);
-            console.timeStamp('updated tbody ' + first + ' to ' + last);
+            // console.timeStamp('updated tbody ' + first + ' to ' + last);
           }
 
           function computeAndRenderBatch(first, last) {
@@ -102,9 +103,10 @@
             console.log('computing first', $scope.n, 'primes');
 
             foundPrimes = [];
-            $scope.primes = [];
+            $scope.primes = new Array($scope.n);
+            $scope.computedN = 0;
 
-            var batchSize = 50;
+            var batchSize = 10000;
             var k;
 
             var computeAndLetUiRender = $q.when();
