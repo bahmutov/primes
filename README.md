@@ -13,7 +13,7 @@ Start by cloning this repo, checkout out tag step-0 and following the tutorial.
 
 Various checkpoints are tagged (step-0, step-1, etc).
 
-![primes](primes.png)
+![primes](images/primes.png)
 
 ### Small print
 
