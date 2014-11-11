@@ -81,7 +81,9 @@
             console.log('primes has changed');
           }, true);
 
-          console.profileEnd('Primes:init');
+          setTimeout(function stopProfile() {
+            console.profileEnd('Primes:init');
+          }, 2000);
 
           $scope.find = function () {
             $timeout(function computePrimes() {
