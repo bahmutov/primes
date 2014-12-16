@@ -5,18 +5,11 @@
   <title>Primes</title>
   <script src="bower_components/jquery/dist/jquery.min.js"></script>
   <script src="bower_components/angular/angular.js"></script>
-  <script src="bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js"></script>
+  <script src="bower_components/angular-vs-repeat/src/angular-vs-repeat.js"></script>
   <style>
-    table {
-      table-layout: fixed;
-      border-collapse: collapse;
-    }
-    tbody {
-      table-layout: fixed;
-    }
-    td {
-      width: 100px;
-      height: 20px;
+    #table {
+      height: 500px;
+      overflow: scroll;
     }
   </style>
 </head>
@@ -26,26 +19,18 @@
 
   <div ng-controller="primesController" ng-cloak>
     <p>AngularJs application found first {{ primes.length }} prime numbers.</p>
-    <table id="table" width="500">
-      <tbody infinite-scroll="find()"
-        infinite-scroll-distance="3"
-        infinite-scroll-immediate-check="true"
-        infinite-scroll-disabled="computing">
-        <tr ng-repeat="prime in primes">
-          <td>index</td>
-          <td>{{ $index + 1 | number:0 }}</td>
-          <td>prime number</td>
-          <td>{{ prime | number:0 }}</td>
-          <td>is prime? true</td>
-        </tr>
-      </tbody>
-    </table>
+    <div id="table" vs-repeat="30">
+      <div ng-repeat="prime in primes">
+        <span>prime number</span>
+        <span>{{ prime | number:0 }}</span>
+      </div>
+    </div>
   </div>
 
   <script>
     (function primesApp() {
 
-      angular.module('Primes', ['infinite-scroll'])
+      angular.module('Primes', ['vs-repeat'])
         .factory('PrimeWorker', function ($q) {
           var worker = new Worker('./primes.js');
           var defer;
@@ -68,7 +53,7 @@
         .controller('primesController', function ($scope, $filter, $timeout, $q, PrimeWorker) {
           var number = $filter('number');
           $scope.primes = [];
-          var batchSize = 100;
+          var batchSize = 10000;
 
           function computePrimes(first, last) {
             return PrimeWorker.computePrimes(first, last).then(function (numbers) {
@@ -88,6 +73,8 @@
               $scope.computing = false;
             });
           };
+
+          $scope.find();
         });
     }());
   </script>
