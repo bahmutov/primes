@@ -13,6 +13,10 @@ Start by cloning this repo, checkout out tag step-0 and following the tutorial.
 
 ![primes](images/primes.png)
 
+You probably need to install a couple of 3rd party libraries before running
+
+    bower install angular-bindonce jquery angular-vs-repeat
+
 Various checkpoints are tagged (step-0, step-1, etc).
 
 * [step-0](https://github.com/bahmutov/primes/releases/tag/step-0) initial application
