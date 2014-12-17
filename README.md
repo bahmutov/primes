@@ -15,7 +15,7 @@ Start by cloning this repo, checkout out tag step-0 and following the tutorial.
 
 You probably need to install a couple of 3rd party libraries before running
 
-    bower install angular-bindonce jquery angular-vs-repeat
+    bower install angular-bindonce jquery angular-vs-repeat --force
 
 Various checkpoints are tagged (step-0, step-1, etc).
 
