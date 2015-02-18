@@ -35,6 +35,7 @@ Various checkpoints are tagged (step-0, step-1, etc).
 * [step-13](https://github.com/bahmutov/primes/releases/tag/step-13) on-demand computation using infinite scroll
 * [step-14](https://github.com/bahmutov/primes/releases/tag/step-14) expensive copy in deep watch
 * [step-15](https://github.com/bahmutov/primes/releases/tag/step-15) limit work to visible elements
+* [step-16](https://github.com/bahmutov/primes/releases/tag/step-16) AngularJS v1.3.13
 
 ### Small print
 
