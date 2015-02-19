@@ -4,6 +4,24 @@
 <head>
   <title>Primes</title>
   <script src="bower_components/angular/angular.js"></script>
+  <style>
+    /*
+    .small {
+      color: green;
+    }
+    .exact {
+      color: blue;
+    }
+    .large {
+      color: red;
+    }*/
+    .ng-invalid {
+      color: red;
+    }
+    .ng-valid {
+      color: green;
+    }
+  </style>
 </head>
 
 <body>
@@ -12,15 +30,29 @@
   <div ng-controller="primesController" ng-cloak>
     <button id="find" ng-click="find()">Find</button> <input ng-model="n" /> primes.
     <p>AngularJs application that finds first {{ n }} prime numbers</p>
-    <table>
-      <tr ng-repeat="prime in primes | orderBy:$index ">
-        <td>{{ "index" | lowercase }}</td>
-        <td>{{ $index + 1 | number:0 | uppercase }}</td>
-        <td>{{ "prime number" | lowercase }}</td>
-        <td>{{ prime | number:0 | uppercase }}</td>
-        <td>is prime? {{ prime | isPrime }}</td>
-      </tr>
-    </table>
+    <form name="form" novalidate>
+      <!--
+      <span ng-show="form.$error.min.length">
+            The values must be larger than 10</span>
+      -->
+
+      <table>
+        <tr ng-repeat="prime in primes | orderBy:$index ">
+          <td>{{ "index" | lowercase }}</td>
+          <td>{{ $index + 1 | number:0 | uppercase }}</td>
+          <td>{{ "prime number" | lowercase }}</td>
+          <!--
+              ng-class="{ 'small': prime < 10, 'exact': prime == 10, 'large': prime > 10 }"
+          -->
+          <td>
+            <input type="number" max="10"
+              ng-model="prime" name="primeNumber" required=""
+              />
+          </td>
+          <td>is prime? {{ prime | isPrime }}</td>
+        </tr>
+      </table>
+    </form>
   </div>
 
   <script>
@@ -74,7 +106,7 @@
           return isPrime;
         })
         .controller('primesController', function ($scope) {
-          $scope.n = 10;
+          $scope.n = 10000;
           $scope.find = function () {
             console.log('computing first', $scope.n, 'primes');
             $scope.primes = [];
