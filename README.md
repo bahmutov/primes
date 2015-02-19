@@ -36,6 +36,7 @@ Various checkpoints are tagged (step-0, step-1, etc).
 * [step-14](https://github.com/bahmutov/primes/releases/tag/step-14) expensive copy in deep watch
 * [step-15](https://github.com/bahmutov/primes/releases/tag/step-15) limit work to visible elements
 * [step-16](https://github.com/bahmutov/primes/releases/tag/step-16) AngularJS v1.3.13
+* [step-17](https://github.com/bahmutov/primes/releases/tag/step-17) `ng-class` vs built-in form validation
 
 ### Small print
 
