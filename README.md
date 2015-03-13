@@ -53,4 +53,4 @@ Spread the word: tweet, star on github, etc.
 Support: if you find any problems with this module, email / tweet /
 [open issue](https://github.com/bahmutov/primes/issues?state=open) on Github
 
-[1]: http://glebbahmutov.com/blog/improving-angular-web-app-performance-example.html
+[1]: http://glebbahmutov.com/blog/improving-angular-web-app-performance-example/
