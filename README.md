@@ -38,6 +38,9 @@ Various checkpoints are tagged (step-0, step-1, etc).
 * [step-16](https://github.com/bahmutov/primes/releases/tag/step-16) AngularJS v1.3.13
 * [step-17](https://github.com/bahmutov/primes/releases/tag/step-17) `ng-class` vs built-in form validation
 
+If you need angular-free primes app for profiling, use 
+[bahmutov/vanilla-primes](https://github.com/bahmutov/vanilla-primes).
+
 ### Small print
 
 Author: Gleb Bahmutov &copy; 2014
