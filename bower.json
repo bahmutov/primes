@@ -23,9 +23,10 @@
   ],
   "dependencies": {
     "angular-bindonce": "~0.3.3",
-    "angular": "1.4.0-beta.4",
+    "angular": "~1.3.15",
     "angular-vs-repeat": "~1.0.0-rc5",
     "jquery": "~2.1.1",
-    "ngInfiniteScroll": "1.0.0"
+    "ngInfiniteScroll": "1.0.0",
+    "ng-webworker": "~0.2.0"
   }
 }

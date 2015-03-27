@@ -6,6 +6,8 @@
   <script src="bower_components/jquery/dist/jquery.min.js"></script>
   <script src="bower_components/angular/angular.js"></script>
   <script src="bower_components/angular-vs-repeat/src/angular-vs-repeat.js"></script>
+  <script src="bower_components/ng-webworker/src/ng-webworker.js"></script>
+  <script src="primes.js"></script>
   <style>
     #table {
       height: 500px;
@@ -18,6 +20,7 @@
   <h1>Primes</h1>
 
   <div ng-controller="primesController" ng-cloak>
+    <p><button id="find" ng-click="find()">find primes</button></p>
     <p>AngularJs application found first {{ primes.length }} prime numbers.</p>
     <div id="table" vs-repeat="30">
       <div ng-repeat="prime in primes">
@@ -30,52 +33,56 @@
   <script>
     (function primesApp() {
 
-      angular.module('Primes', ['vs-repeat'])
-        .factory('PrimeWorker', function ($q) {
-          var worker = new Worker('./primes.js');
-          var defer;
+      var app = angular.module('Primes', ['ngWebworker', 'vs-repeat']);
 
-          worker.onmessage = function(e) {
-            defer.resolve(e.data);
-          };
+      /*
+      app.config(function(WebworkerProvider) {
+        WebworkerProvider.setHelperPath('./bower_components/ng-webworker/src/worker_wrapper.js');
+        // WebworkerProvider.setUseHelper(true);
+      });*/
 
-          return {
-            computePrimes: function (first, last) {
-              defer = $q.defer();
-              worker.postMessage({
-                first: first,
-                last: last
-              });
-              return defer.promise;
-            }
+      app.factory('PrimeWorker', function (Webworker) {
+        // var worker = Webworker.create('primes.js');
+        console.assert(typeof primes === 'function', 'expected "primes" function');
+
+        // worker initialization before saves around 50ms
+        var worker = Webworker.create(primes);
+
+        return {
+          computePrimes: function (n) {
+            return worker.run(n);
           }
-        })
-        .controller('primesController', function ($scope, $filter, $timeout, $q, PrimeWorker) {
-          var number = $filter('number');
-          $scope.primes = [];
-          var batchSize = 10000;
+        };
+      });
 
-          function computePrimes(first, last) {
-            return PrimeWorker.computePrimes(first, last).then(function (numbers) {
-              var k, n = numbers.length;
-              for(k = 0; k < n; k += 1) {
-                $scope.primes.push(numbers[k]);
-              }
-            });
-          }
+      app.controller('primesController', function ($scope, PrimeWorker) {
+        $scope.primes = [];
+        var batchSize = 200000;
 
-          $scope.find = function () {
-            $scope.computing = true;
+        function setPrimes(numbers) {
+          $scope.primes = numbers;
+        }
 
-            return computePrimes($scope.primes.length, $scope.primes.length + batchSize)
+        function computePrimes(n) {
+          return PrimeWorker
+            .computePrimes(n)
+            .then(setPrimes);
+        }
+
+        $scope.find = function () {
+          $scope.computing = true;
+
+          var started = performance.now();
+          return computePrimes(batchSize)
             .then(function () {
-              console.log('computed', $scope.primes.length, 'primes');
+              var finished = performance.now();
+              console.log('computed', $scope.primes.length, 'primes in', finished - started, 'ms');
               $scope.computing = false;
             });
-          };
+        };
 
-          $scope.find();
-        });
+        // $scope.find();
+      });
     }());
   </script>
 </body>
