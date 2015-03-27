@@ -1,0 +1,31 @@
+{
+  "name": "primes",
+  "main": "primes.js",
+  "version": "1.0.0",
+  "homepage": "https://github.com/bahmutov/primes",
+  "authors": [
+    "Gleb Bahmutov <gleb.bahmutov@gmail.com>"
+  ],
+  "description": "Example angular application for performance exploration",
+  "keywords": [
+    "test",
+    "primes",
+    "angular"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-bindonce": "~0.3.3",
+    "angular": "1.4.0-beta.4",
+    "angular-vs-repeat": "~1.0.0-rc5",
+    "jquery": "~2.1.1",
+    "ngInfiniteScroll": "1.0.0"
+  }
+}
